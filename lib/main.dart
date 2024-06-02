@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(data[index]['CanIdentifier'].toString()),
-                  subtitle: Text(data[index]['Type'].toString()),
+                  subtitle: Image.network(data[index]['ImageFront'].toString()),
                 );
               },
             );

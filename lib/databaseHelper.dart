@@ -25,15 +25,23 @@ class DatabaseHelper {
     String path = join(documentsDirectory.path, 'can_data.db');
 
     // Only copy if the database doesn't already exist
-    if (!await File(path).exists()) {
-      // Load database from asset and copy
-      ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
-      List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    // if (!await File(path).exists()) {
+    //   // Load database from asset and copy
+    //   ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
+    //   List<int> bytes =
+    //   data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    //
+    //   // Write the copied database to the device
+    //   await File(path).writeAsBytes(bytes);
+    // }
 
-      // Write the copied database to the device
-      await File(path).writeAsBytes(bytes);
-    }
+    // Load database from asset and copy
+    ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
+    List<int> bytes =
+    data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+    // Write the copied database to the device
+    await File(path).writeAsBytes(bytes);
 
     return await openDatabase(path, readOnly: true);
   }
