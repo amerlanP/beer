@@ -57,7 +57,38 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(data[index]['CanIdentifier'].toString()),
-                  subtitle: Image.network(data[index]['ImageFront'].toString()),
+                  // subtitle: Image.network(data[index]['ImageFront'].toString()),
+                  subtitle: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                        )
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    height: 300,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          Image.network(data[index]['ImageFront'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                          Image.network(data[index]['ImageLeft'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                          Image.network(data[index]['ImageRight'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                          Image.network(data[index]['ImageBack'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                          Image.network(data[index]['ImageTop'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                          ],
+                      ),
+                    )
+                  )
                 );
               },
             );
