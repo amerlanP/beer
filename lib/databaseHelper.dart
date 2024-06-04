@@ -35,6 +35,7 @@ class DatabaseHelper {
     //   await File(path).writeAsBytes(bytes);
     // }
 
+    // ALWAYS LOAD DATABASE IN CASE OF CHANGE
     // Load database from asset and copy
     ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
     List<int> bytes =
@@ -47,8 +48,13 @@ class DatabaseHelper {
   }
 
   // Example function to get data from the database
-  Future<List<Map<String, dynamic>>> getData(String table) async {
+  Future<List<Map<String, dynamic>>> getData({String? query}) async {
     Database db = await database;
-    return await db.query(table);
+    if (query != null) {
+      return await db.query('my_table', where: 'CanIdentifier LIKE ?', whereArgs: ['%$query%']);
+    } else {
+      return await db.query('my_table');
+    }
+
   }
 }
