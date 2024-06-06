@@ -57,4 +57,42 @@ class DatabaseHelper {
     }
 
   }
+
+  Future<List<Map<String, dynamic>>> getDataWithFilters(Map<String, dynamic> filters) async {
+    Database db = await database;
+    String query = 'SELECT * FROM my_table WHERE 1=1';
+    List<String> whereArgs = [];
+
+    if (filters['minPrice'] != null && filters['minPrice'].isNotEmpty) {
+      query += ' AND Price >= ?';
+      whereArgs.add(filters['minPrice']);
+    }
+
+    if (filters['maxPrice'] != null && filters['maxPrice'].isNotEmpty) {
+      query += ' AND Price <= ?';
+      whereArgs.add(filters['maxPrice']);
+    }
+
+    if (filters['city'] != null && filters['city'].isNotEmpty) {
+      query += ' AND City LIKE ?';
+      whereArgs.add('%${filters['city']}%');
+    }
+
+    if (filters['state'] != null && filters['state'].isNotEmpty) {
+      query += ' AND State LIKE ?';
+      whereArgs.add('%${filters['state']}%');
+    }
+
+    if (filters['brand'] != null && filters['brand'].isNotEmpty) {
+      query += ' AND Brand LIKE ?';
+      whereArgs.add('%${filters['brand']}%');
+    }
+
+    if (filters['types'] != null && filters['types'].isNotEmpty) {
+      query += ' AND Type IN (${filters['types'].map((type) => '?').join(',')})';
+      whereArgs.addAll(filters['types']);
+    }
+
+    return await db.rawQuery(query, whereArgs);
+  }
 }

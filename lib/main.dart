@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'databaseHelper.dart';
+import 'search_filter.dart';
+import 'can_detail_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,19 +38,69 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _searchController = TextEditingController();
   Future<List<Map<String,dynamic>>> _canData = DatabaseHelper().getData();
 
+  // void _searchCans(String myQuery) {
+  //   try {
+  //     var newData = dbHelper.getData(query: myQuery);
+  //     setState(() {
+  //       _canData = newData;
+  //     });
+  //   } catch (e) {
+  //     print("ERROR $e");
+  //   }
+  // }
+  //
+  // void _searchCansWithFilters(Map<String, dynamic> filters) {
+  //   try {
+  //     var newData = dbHelper.getDataWithFilters(filters);
+  //     setState(() {
+  //       _canData = newData;
+  //     });
+  //   } catch (e) {
+  //     print("ERROR $e");
+  //   }
+  // }
+
+  //  RESPONSE A
+  List<Map<String, dynamic>> _filteredData = [];
+
   void _searchCans(String myQuery) {
     try {
-      var newData = dbHelper.getData(query: myQuery);
+      if (_filteredData.isEmpty) {
+        var newData = dbHelper.getData(query: myQuery);
+        setState(() {
+          _canData = newData;
+        });
+      } else {
+        var newData = _filteredData.where((can) {
+          return can['CanIdentifier'].toString().contains(myQuery);
+        }).toList();
+        setState(() {
+          _canData = Future.value(newData);
+        });
+      }
+    } catch (e) {
+      print("ERROR $e");
+    }
+  }
+
+  void _searchCansWithFilters(Map<String, dynamic> filters) {
+    try {
+      var newData = dbHelper.getDataWithFilters(filters);
       setState(() {
+        _filteredData = [];
         _canData = newData;
+        _canData.then((value) => _filteredData = value);
       });
     } catch (e) {
       print("ERROR $e");
     }
-    // setState(() {
-    //   _canData = dbHelper.getData(myQuery);
-    //   print("SEARCH QUERY: ${myQuery}");
-    // });
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _filteredData = [];
+      _canData = DatabaseHelper().getData();
+    });
   }
 
   Widget _canDataBuilder(BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
@@ -97,8 +149,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   )
-              )
-            )
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CanDetailPage(canData: data[index])),
+                );
+              },
+            ),
           );
         },
       );
@@ -117,12 +175,13 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: const EdgeInsets.all(8),
             child: TextField(
               controller: _searchController,
-              keyboardType: TextInputType.number,
+              // keyboardType: TextInputType.number,
+              // textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 labelText: "Can Identifier",
                 border: OutlineInputBorder()
               ),
-              onSubmitted: _searchCans,
+              onChanged: _searchCans,
             ),
           ),
           // child: TextField(
@@ -133,6 +192,43 @@ class _MyHomePageState extends State<MyHomePage> {
       body: FutureBuilder<List<Map<String, dynamic>>> (
         future: _canData,
         builder: _canDataBuilder,
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     final filters = await Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => SearchFilterPage()),
+      //     );
+      //     if (filters != null) {
+      //       _searchCansWithFilters(filters);
+      //     }
+      //   },
+      //   child: Icon(Icons.filter_list),
+      // ),
+
+      //  RESPONSE A
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final filters = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SearchFilterPage()),
+          );
+          if (filters != null) {
+            _searchCansWithFilters(filters);
+          }
+        },
+        child: Icon(Icons.filter_list),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ElevatedButton(
+              onPressed: _clearFilters,
+              child: Text('Clear Filters'),
+            ),
+          ],
+        ),
       ),
     );
   }
