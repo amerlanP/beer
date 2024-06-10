@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 
 class CanDetailPage extends StatefulWidget {
@@ -12,30 +13,31 @@ class CanDetailPage extends StatefulWidget {
 }
 
 class _CanDetailPageState extends State<CanDetailPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.canData['CanIdentifier']),
+        title: Text(widget.canData['CanIdentifier'].toString()),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.open_in_browser),
+            icon: const Icon(Icons.open_in_browser),
             onPressed: () {
-              launch('https://www.google.com');
+              launchUrl(Uri.parse('http://bcca-usbc-supplement.com/Volume1SupplementDetailView.aspx?@CanIdentifierForDetailView=${widget.canData['CanIdentifier']}'));
             },
           ),
         ],
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
-            height: 200,
+            height: 400,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
@@ -57,20 +59,24 @@ class _CanDetailPageState extends State<CanDetailPage> {
               ],
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Field')),
-                  DataColumn(label: Text('Value')),
-                ],
-                rows: widget.canData.entries.map((entry) {
-                  return DataRow(cells: [
-                    DataCell(Text(entry.key)),
-                    DataCell(Text(entry.value.toString())),
-                  ]);
-                }).toList(),
-              ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text("Field")),
+                DataColumn(label: Text("Value")),
+              ],
+              rows: widget.canData.entries.map((entry) {
+                return DataRow(cells: [
+                  DataCell(Text(entry.key)),
+                  DataCell(
+                    Text(entry.value.toString()),
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: entry.value.toString()));
+                    }
+                  ),
+                ]);
+              }).toList(),
             ),
           ),
         ],

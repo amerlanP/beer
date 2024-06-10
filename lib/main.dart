@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Beer Can App',
       theme: ThemeData(
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -37,31 +37,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final DatabaseHelper dbHelper = DatabaseHelper();
   final TextEditingController _searchController = TextEditingController();
   Future<List<Map<String,dynamic>>> _canData = DatabaseHelper().getData();
-
-  // void _searchCans(String myQuery) {
-  //   try {
-  //     var newData = dbHelper.getData(query: myQuery);
-  //     setState(() {
-  //       _canData = newData;
-  //     });
-  //   } catch (e) {
-  //     print("ERROR $e");
-  //   }
-  // }
-  //
-  // void _searchCansWithFilters(Map<String, dynamic> filters) {
-  //   try {
-  //     var newData = dbHelper.getDataWithFilters(filters);
-  //     setState(() {
-  //       _canData = newData;
-  //     });
-  //   } catch (e) {
-  //     print("ERROR $e");
-  //   }
-  // }
-
-  //  RESPONSE A
   List<Map<String, dynamic>> _filteredData = [];
+  bool _filters = false;
 
   void _searchCans(String myQuery) {
     try {
@@ -87,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       var newData = dbHelper.getDataWithFilters(filters);
       setState(() {
+        _filters = true;
         _filteredData = [];
         _canData = newData;
         _canData.then((value) => _filteredData = value);
@@ -98,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _clearFilters() {
     setState(() {
+      _filters = false;
       _filteredData = [];
       _canData = DatabaseHelper().getData();
     });
@@ -166,27 +145,47 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      //   title: Text(widget.title),
+      //   bottom: PreferredSize(
+      //     preferredSize: const Size.fromHeight(56),
+      //     child: Padding(
+      //       padding: const EdgeInsets.all(8),
+      //       child: TextField(
+      //         controller: _searchController,
+      //         // keyboardType: TextInputType.number,
+      //         // textInputAction: TextInputAction.done,
+      //         decoration: const InputDecoration(
+      //           labelText: "Can Identifier",
+      //           border: OutlineInputBorder()
+      //         ),
+      //         onChanged: _searchCans,
+      //       ),
+      //     ),
+      //     // child: TextField(
+      //     //   controller: _searchController,
+      //     // ),
+      //   ),
+      // ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: TextField(
-              controller: _searchController,
-              // keyboardType: TextInputType.number,
-              // textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                labelText: "Can Identifier",
-                border: OutlineInputBorder()
-              ),
-              onChanged: _searchCans,
-            ),
+        elevation: 3,
+        shadowColor: Colors.black,
+        title: TextField(
+          controller: _searchController,
+          keyboardType: const TextInputType.numberWithOptions(),
+          // textInputAction: TextInputAction.done,
+          decoration: const InputDecoration(
+            labelText: "Can Identifier",
+            border: OutlineInputBorder()
           ),
-          // child: TextField(
-          //   controller: _searchController,
-          // ),
+          onChanged: _searchCans,
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(16),
+          // child: SizedBox(height: 16)
+          child: Container()
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>> (
@@ -219,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: Icon(Icons.filter_list),
       ),
-      bottomNavigationBar: BottomAppBar(
+      bottomNavigationBar: _filters ? BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -229,7 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
+      ) : null,
     );
   }
 }

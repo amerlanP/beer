@@ -13,82 +13,89 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
-
-  List<String> _types = ['Type1', 'Type2', 'Type3']; // replace with your types
-  List<String> _selectedTypes = [];
+  final Map<String, String> _types = ({'Flats':'F', 'Cones':'C', 'Crowns':'K', 'Quarts':'Q', 'Pints':'P', 'Bigs':'B', 'Smalls':'S', 'Gallons':'G'});
+  final List<String> _selectedTypes = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Filters'),
+        title: const Text('Search Filters'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: ListView(
           children: [
-            TextField(
-              controller: _minPriceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Minimum Price',
-                border: OutlineInputBorder(),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _minPriceController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Minimum Price',
+                      border: OutlineInputBorder(),
+                    ),
+                  )
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                    child: TextField(
+                      controller: _maxPriceController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Maximum Price',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                )
+              ],
             ),
-            SizedBox(height: 16),
-            TextField(
-              controller: _maxPriceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Maximum Price',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _cityController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'City',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _stateController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'State',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _brandController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Brand',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Column(
-              children: _types.map((type) {
+              children: _types.entries.map((entry) {
                 return CheckboxListTile(
-                  title: Text(type),
-                  value: _selectedTypes.contains(type),
+                  title: Text(entry.key),
+                  value: _selectedTypes.contains(entry.value),
                   onChanged: (value) {
                     if (value!) {
                       setState(() {
-                        _selectedTypes.add(type);
+                        _selectedTypes.add(entry.value);
                       });
                     } else {
                       setState(() {
-                        _selectedTypes.remove(type);
+                        _selectedTypes.remove(entry.value);
                       });
                     }
                   },
                 );
-              }).toList(),
+              }).toList()
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 // Apply filters and navigate back to the main page
@@ -101,7 +108,7 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
                   'types': _selectedTypes,
                 });
               },
-              child: Text('Apply Filters'),
+              child: const Text('Apply Filters'),
             ),
           ],
         ),
