@@ -5,11 +5,10 @@ import 'package:flutter/services.dart';
 
 class CanDetailPage extends StatefulWidget {
   final Map<String, dynamic> canData;
-
-  CanDetailPage({required this.canData});
+  const CanDetailPage({super.key, required this.canData});
 
   @override
-  _CanDetailPageState createState() => _CanDetailPageState();
+  State<CanDetailPage> createState() => _CanDetailPageState();
 }
 
 class _CanDetailPageState extends State<CanDetailPage> {

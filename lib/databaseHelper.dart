@@ -93,6 +93,15 @@ class DatabaseHelper {
       whereArgs.addAll(filters['types']);
     }
 
+    if (filters['brewery'] != null && filters['brewery'].isNotEmpty) {
+      query += ' AND Brewery LIKE ?';
+      whereArgs.add('%${filters['brewery']}%');
+    }
+
+    if (filters['canIdentifier'] != null && filters['canIdentifier'].isNotEmpty) {
+      query += ' AND CanIdentifier LIKE ?';
+      whereArgs.add('%${filters['canIdentifier']}%');
+    }
     return await db.rawQuery(query, whereArgs);
   }
 }

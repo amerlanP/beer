@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
-import 'databaseHelper.dart';
 
 class SearchFilterPage extends StatefulWidget {
+  const SearchFilterPage({super.key});
+
   @override
-  _SearchFilterPageState createState() => _SearchFilterPageState();
+  State<SearchFilterPage> createState() => _SearchFilterPageState();
 }
 
 class _SearchFilterPageState extends State<SearchFilterPage> {
-  final DatabaseHelper dbHelper = DatabaseHelper();
-  final TextEditingController _minPriceController = TextEditingController();
-  final TextEditingController _maxPriceController = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _brandController = TextEditingController();
   final Map<String, String> _types = ({'Flats':'F', 'Cones':'C', 'Crowns':'K', 'Quarts':'Q', 'Pints':'P', 'Bigs':'B', 'Smalls':'S', 'Gallons':'G'});
   final List<String> _selectedTypes = [];
+  final List<String> _textFields = ['Can Identifier','Brand', 'Brewery', 'City', 'State'];
+  final Map<String, TextEditingController> _textControllers = ({
+    'minPrice': TextEditingController(),
+    'maxPrice':TextEditingController(),
+    'Can Identifier':TextEditingController(),
+    'Brand':TextEditingController(),
+    'Brewery':TextEditingController(),
+    'City':TextEditingController(),
+    'State':TextEditingController()
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +28,29 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
         title: const Text('Search Filters'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
+            ListView.separated(
+              shrinkWrap: true,
+              itemCount: _textFields.length,
+              itemBuilder: (context, index) => (
+                  TextField(
+                    controller: _textControllers[_textFields[index]],
+                    decoration: InputDecoration(
+                      labelText: _textFields[index],
+                      border: const OutlineInputBorder(),
+                    ),
+                  )
+              ),
+              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _minPriceController,
-                    keyboardType: TextInputType.number,
+                    controller: _textControllers['minPrice'],
                     decoration: const InputDecoration(
                       labelText: 'Minimum Price',
                       border: OutlineInputBorder(),
@@ -41,8 +60,7 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
                 const SizedBox(width: 16),
                 Expanded(
                     child: TextField(
-                      controller: _maxPriceController,
-                      keyboardType: TextInputType.number,
+                      controller: _textControllers['maxPrice'],
                       decoration: const InputDecoration(
                         labelText: 'Maximum Price',
                         border: OutlineInputBorder(),
@@ -51,31 +69,6 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
                 )
               ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _cityController,
-              decoration: const InputDecoration(
-                labelText: 'City',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _stateController,
-              decoration: const InputDecoration(
-                labelText: 'State',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _brandController,
-              decoration: const InputDecoration(
-                labelText: 'Brand',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
             Column(
               children: _types.entries.map((entry) {
                 return CheckboxListTile(
@@ -100,11 +93,13 @@ class _SearchFilterPageState extends State<SearchFilterPage> {
               onPressed: () {
                 // Apply filters and navigate back to the main page
                 Navigator.pop(context, {
-                  'minPrice': _minPriceController.text,
-                  'maxPrice': _maxPriceController.text,
-                  'city': _cityController.text,
-                  'state': _stateController.text,
-                  'brand': _brandController.text,
+                  'minPrice': _textControllers['minPrice']!.text.trim(),
+                  'maxPrice': _textControllers['maxPrice']!.text.trim(),
+                  'city': _textControllers['City']!.text.trim(),
+                  'state': _textControllers['State']!.text.trim(),
+                  'brand': _textControllers['Brand']!.text.trim(),
+                  'brewery': _textControllers['Brewery']!.text.trim(),
+                  'canIdentifier': _textControllers['Can Identifier']!.text.trim(),
                   'types': _selectedTypes,
                 });
               },

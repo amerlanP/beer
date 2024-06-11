@@ -13,8 +13,16 @@ def imageConcat(df, side):
     else:
         return "http://bcca-usbc-supplement.com/images/SupplementImages/" + str(df['CanIdentifier']) + "_Back.jpg"
 
+def priceFix(price):
+    if price == '1000+':
+        return 9999
+    elif pd.isna(price):
+        return 0
+    else:
+        return int(price)
+
 # Define the path to the CSV file and the SQLite database file
-csv_file_path = 'table_data.csv'  # Replace with your CSV file path
+csv_file_path = 'table_data_volume1.csv'  # Replace with your CSV file path
 sqlite_db_path = 'can_data.db'  # Replace with your desired SQLite database path
 
 # Read the CSV file into a DataFrame
@@ -26,6 +34,8 @@ df['ImageLeft'] = df.apply(imageConcat, args=("L"), axis=1)
 df['ImageRight'] = df.apply(imageConcat, args=("R"), axis=1)
 df['ImageTop'] = df.apply(imageConcat, args=("T"), axis=1)
 df['ImageBack'] = df.apply(imageConcat, args=("B"), axis=1)
+
+df['Price'] = df['Price'].apply(priceFix)
 
 # Connect to the SQLite database (it will create the file if it does not exist)
 conn = sqlite3.connect(sqlite_db_path)
