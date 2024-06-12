@@ -99,6 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 3,
         shadowColor: Colors.black,
+        toolbarHeight: 75,
         title: TextField(
           controller: _searchController,
           decoration: const InputDecoration(
@@ -106,10 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
             border: OutlineInputBorder()
           ),
           onChanged: _searchCans,
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(16),
-          child: Container()
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>> (

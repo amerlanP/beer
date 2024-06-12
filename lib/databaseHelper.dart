@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,21 +22,10 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
+
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'can_data.db');
-
-    // Only copy if the database doesn't already exist
-    // if (!await File(path).exists()) {
-    //   // Load database from asset and copy
-    //   ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
-    //   List<int> bytes =
-    //   data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-    //
-    //   // Write the copied database to the device
-    //   await File(path).writeAsBytes(bytes);
-    // }
-
-    // ALWAYS LOAD DATABASE IN CASE OF CHANGE
+    
     // Load database from asset and copy
     ByteData data = await rootBundle.load(join('assets', 'can_data.db'));
     List<int> bytes =

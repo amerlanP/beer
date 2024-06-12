@@ -21,10 +21,16 @@ class _BeerCanListState extends State<BeerCanList> {
             title: Row(
               children: [
                 Expanded(
-                  child:Text(widget.data[index]['CanIdentifier'].toString()),
+                  child: Text(widget.data[index]['CanIdentifier'].toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 Expanded(
-                  child: Text('Price: \$${widget.data[index]['Price'].toString()}'),
+                  child: Text('Price: \$${widget.data[index]['Price'].toString()}',
+                    textAlign: TextAlign.end,
+                  ),
                 )
 
               ],
