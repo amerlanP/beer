@@ -40,9 +40,34 @@ class _CanDetailPageState extends State<CanDetailPage> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                Image.network(widget.canData['ImageFront'].toString(),
-                  errorBuilder: (context, error, trace) => Container(),
+                // Image.network(widget.canData['ImageFront'].toString(),
+                //   errorBuilder: (context, error, trace) => Container(),
+                // ),
+                GestureDetector(
+                  child: InteractiveViewer(
+                    minScale: 1.0,
+                    maxScale: 10.0,
+                    child: Image.network(widget.canData['ImageFront'].toString(),
+                      errorBuilder: (context, error, trace) => Container(),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return InteractiveViewer(
+                          minScale: 1.0,
+                          maxScale: 10.0,
+                          child: Image.network(widget.canData['ImageFront'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
+                        );
+                      }
+                      )
+                    );
+                  },
                 ),
+
                 Image.network(widget.canData['ImageLeft'].toString(),
                   errorBuilder: (context, error, trace) => Container(),
                 ),

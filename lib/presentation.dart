@@ -41,8 +41,15 @@ class _BeerCanListState extends State<BeerCanList> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      Image.network(widget.data[index]['ImageFront'].toString(),
-                        errorBuilder: (context, error, trace) => Container(),
+                      // Image.network(widget.data[index]['ImageFront'].toString(),
+                      //   errorBuilder: (context, error, trace) => Container(),
+                      // ),
+                      InteractiveViewer(
+                        minScale: 1.0,
+                        maxScale: 2.0,
+                        child: Image.network(widget.data[index]['ImageFront'].toString(),
+                            errorBuilder: (context, error, trace) => Container(),
+                          ),
                       ),
                       Image.network(widget.data[index]['ImageLeft'].toString(),
                         errorBuilder: (context, error, trace) => Container(),
