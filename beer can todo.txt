@@ -1,6 +1,3 @@
-# Beer Can Database Lookup App
-
-## TODO
 disable auto correct
 make can identifier on main page smaller
 add brand search to main page
