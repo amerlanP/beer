@@ -9,3 +9,4 @@ make advanced filters smaller
 put apply filter button top right
 add brand, city, tax to beer cards
 tax -- O = opening instructions, T = irtp, W =tax withdrawn
+
